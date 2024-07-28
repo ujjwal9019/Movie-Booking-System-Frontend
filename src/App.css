@@ -25,3 +25,20 @@
 .login-container p {
   margin-top: 10px;
 }
+
+
+/* card css */
+/* styles.css or any appropriate file */
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
