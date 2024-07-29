@@ -1,26 +1,23 @@
-import { useState } from 'react'
-import Login from './pages/Login'
-import './App.css'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+// App.jsx
+import { useState } from 'react';
+import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
 import RegisterForm from './pages/RegisterForm';
-import Home from './pages/Home'; // Create this component for the home page
-
+import Home from './pages/Home';
+import MovieDetails from './pages/MovieDetails'; // Import the new component
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return  (
+  return (
     <Router>
-    <Routes>
+      <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/" element={<Home />} /> {/* HomePage component */}
-       
-    </Routes>
-</Router>
-
-);
-
+        <Route path="/" element={<Home />} />
+        <Route path="/movie/:movieId" element={<MovieDetails />} /> {/* New route for movie details */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
