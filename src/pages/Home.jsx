@@ -10,12 +10,17 @@ const Home = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const [isLastPage, setIsLastPage] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState('title'); // Default sort option
   const navigate = useNavigate();
 
-  const fetchMovies = async (page) => {
+  const fetchMovies = async (page, sort) => {
     try {
       const token = localStorage.getItem('accessToken');
-      const response = await axios.get(`http://localhost:8080/api/v1/movie/allMoviesPage?pageNumber=${page}`, {
+      const response = await axios.get(`http://localhost:8080/api/v1/movie/allMoviesPageSort`, {
+        params: {
+          pageNumber: page,
+          sortBy: sort
+        },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -30,53 +35,79 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchMovies(pageNumber);
-  }, [pageNumber]);
+    fetchMovies(pageNumber, sortBy);
+  }, [pageNumber, sortBy]);
 
   const handleCardClick = (movieId) => {
     navigate(`/movie/${movieId}`);
   };
 
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+    setPageNumber(0); // Reset page number to 0 when sort changes
+  };
+
   return (
     <div>
       <Navbar />
-      <div className="flex flex-wrap gap-14 p-6">
-        {movies.map((movie) => (
-          <div
-            key={movie.movieId}
-            className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 cursor-pointer"
-            onClick={() => handleCardClick(movie.movieId)}
+      <div className="p-6">
+        {/* Sort Dropdown */}
+        <div className="mb-4 pl-[74rem]">
+          <label htmlFor="sort" className="mr-2">Sort by:</label>
+          <select
+            id="sort"
+            value={sortBy}
+            onChange={handleSortChange}
+            className="border rounded-md p-2"
           >
-            <a href="#!">
-              <img
-                className="rounded-t-lg h-[100px]"
-                src={movie.posterUrl}
-                alt={movie.title}
+            <option value="title">Title</option>
+            <option value="releaseYear">Release Year</option>
+            <option value="director">director</option>
+            <option value="studio">Studio</option>
+           
+            
+            {/* Add more options as needed */}
+          </select>
+        </div>
+
+        <div className="flex flex-wrap gap-14">
+          {movies.map((movie) => (
+            <div
+              key={movie.movieId}
+              className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 cursor-pointer"
+              onClick={() => handleCardClick(movie.movieId)}
+            >
+              <a href="#!">
+                <img
+                  className="rounded-t-lg h-[100px]"
+                  src={movie.posterUrl}
+                  alt={movie.title}
                   loading="lazy"
-              />
-            </a>
-            <div className="p-6">
-              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-                {movie.title}
-              </h5>
-              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-                Director: {movie.director}
-                <br />
-                Studio: {movie.studio}
-                <br />
-                Release Year: {movie.releaseYear}
-              </p>
-              <TERipple>
-                <button
-                  type="button"
-                  className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
-                >
-                  View more
-                </button>
-              </TERipple>
+                />
+              </a>
+              <div className="p-6">
+                <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                  {movie.title}
+                </h5>
+                <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
+                  Director: {movie.director}
+                  <br />
+                  Studio: {movie.studio}
+                  <br />
+                  Release Year: {movie.releaseYear}
+                </p>
+                <TERipple>
+                  <button
+                    type="button"
+                    className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                  >
+                    View more
+                  </button>
+                </TERipple>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <div className="flex justify-center gap-4 p-6">
         <button
