@@ -1,4 +1,3 @@
-// MovieDetails.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -28,13 +27,15 @@ const MovieDetails = () => {
   if (!movie) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="movie-details">
       <h2>{movie.title}</h2>
       <p>Director: {movie.director}</p>
       <p>Studio: {movie.studio}</p>
       <p>Release Year: {movie.releaseYear}</p>
       <p>Cast: {movie.movieCast.join(', ')}</p>
-      <img src={movie.posterUrl} alt={movie.title} />
+      {movie.posterUrl && (
+        <img src={movie.posterUrl} alt={movie.title} className="movie-poster" />
+      )}
     </div>
   );
 };

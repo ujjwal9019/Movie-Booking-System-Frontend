@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Navbar } from '../components/Navbar';
+import { FooterThree } from '../components/Footer';
+import { TERipple } from 'tw-elements-react';
 
 const Home = () => {
   const [movies, setMovies] = useState([]);
@@ -34,19 +37,41 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Movies</h2>
-      <div>
+      <Navbar />
+      <div className="flex flex-wrap gap-14 p-6">
         {movies.map((movie) => (
-          <div key={movie.movieId} className="card" onClick={() => handleCardClick(movie.movieId)}>
-            <h3>{movie.title}</h3>
-            <p>{movie.director}</p>
-            <p>{movie.studio}</p>
-            <p>{movie.releaseYear}</p>
-            <img src={movie.posterUrl} alt={movie.title} />
+          <div
+            key={movie.movieId}
+            className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 cursor-pointer"
+            onClick={() => handleCardClick(movie.movieId)}
+          >
+            <a href="#!">
+              <img
+                className="rounded-t-lg h-[100px] "
+                src={movie.posterUrl}
+                alt={movie.title}
+              />
+            </a>
+            <div className="p-6">
+              <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
+                {movie.title}
+              </h5>
+              <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
+                Director: {movie.director}
+                <br />
+                Studio: {movie.studio}
+                <br />
+                Release Year: {movie.releaseYear}
+              </p>
+              <TERipple>
+              <button type="button" 
+              class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">View more</button>
+              </TERipple>
+            </div>
           </div>
         ))}
       </div>
-      <div>
+      <div className="flex justify-center gap-4 p-6">
         <button onClick={() => setPageNumber((prev) => Math.max(prev - 1, 0))} disabled={pageNumber === 0}>
           Previous
         </button>
@@ -54,6 +79,7 @@ const Home = () => {
           Next
         </button>
       </div>
+      <FooterThree />
     </div>
   );
 };
