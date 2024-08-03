@@ -5,7 +5,7 @@ import { Navbar } from '../components/Navbar';
 import { FooterThree } from '../components/Footer';
 
 const MovieDetails = () => {
-  const { movieId } = useParams(); // Get the movieId from the route parameters
+  const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ const MovieDetails = () => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
           console.error('Access token not found');
-          navigate('/login'); // Redirect to login page if no token
+          navigate('/login');
           return;
         }
         const response = await axios.get(`http://localhost:8080/api/v1/movie/${movieId}`, {
@@ -26,9 +26,9 @@ const MovieDetails = () => {
         setMovie(response.data);
       } catch (error) {
         console.error('Error fetching movie details:', error);
-        if (error.response.status === 403) {
+        if (error.response && error.response.status === 403) {
           alert('You do not have permission to view this resource.');
-          navigate('/'); // Redirect if forbidden
+          navigate('/');
         }
       }
     };
@@ -49,10 +49,10 @@ const MovieDetails = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      navigate('/'); // Redirect to the home page or another relevant page after deletion
+      navigate('/');
     } catch (error) {
       console.error('Error deleting movie:', error);
-      if (error.response.status === 403) {
+      if (error.response && error.response.status === 403) {
         alert('You do not have permission to delete this movie.');
       }
     }
@@ -82,7 +82,6 @@ const MovieDetails = () => {
         <p><span className="font-semibold">Cast:</span> {movie.movieCast.join(', ')}</p>
         <p><span className="font-semibold">Description:</span> {movie.description}</p>
 
-        {/* Buttons for Update and Delete */}
         <div className="mt-4">
           <button
             onClick={handleUpdate}
