@@ -13,13 +13,24 @@ const Home = () => {
   const [sortBy, setSortBy] = useState('title'); // Default sort option
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      // If token is not present, redirect to the register page
+      alert('Please register yourself to access this feature.');
+      navigate('/register');
+    } else {
+      fetchMovies(pageNumber, sortBy);
+    }
+  }, [pageNumber, sortBy]);
+
   const fetchMovies = async (page, sort) => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await axios.get(`http://localhost:8080/api/v1/movie/allMoviesPageSort`, {
         params: {
           pageNumber: page,
-          sortBy: sort
+          sortBy: sort,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -33,10 +44,6 @@ const Home = () => {
       console.error('Error fetching movies:', error);
     }
   };
-
-  useEffect(() => {
-    fetchMovies(pageNumber, sortBy);
-  }, [pageNumber, sortBy]);
 
   const handleCardClick = (movieId) => {
     navigate(`/movie/${movieId}`);
@@ -62,10 +69,8 @@ const Home = () => {
           >
             <option value="title">Title</option>
             <option value="releaseYear">Release Year</option>
-            <option value="director">director</option>
+            <option value="director">Director</option>
             <option value="studio">Studio</option>
-           
-            
             {/* Add more options as needed */}
           </select>
         </div>
